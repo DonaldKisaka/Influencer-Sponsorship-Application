@@ -1,0 +1,46 @@
+package com.example.influencer.sponsorship.application.config;
+
+import com.example.influencer.sponsorship.application.repository.InfluencerRepository;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+public class ApplicationConfig {
+    private final InfluencerRepository influencerRepository;
+
+    public ApplicationConfig(InfluencerRepository influencerRepository) {
+        this.influencerRepository = influencerRepository;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> influencerRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationProvider authProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+
+    }
+}
