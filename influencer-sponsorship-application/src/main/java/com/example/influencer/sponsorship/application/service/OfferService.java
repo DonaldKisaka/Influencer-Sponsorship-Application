@@ -9,10 +9,10 @@ import com.example.influencer.sponsorship.application.model.OfferStatus;
 import com.example.influencer.sponsorship.application.repository.BrandRepository;
 import com.example.influencer.sponsorship.application.repository.InfluencerRepository;
 import com.example.influencer.sponsorship.application.repository.OfferRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
