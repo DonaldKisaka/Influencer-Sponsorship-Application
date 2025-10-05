@@ -3,6 +3,7 @@ package com.example.influencer.sponsorship.application.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "offers")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Offer {
 
     @Id

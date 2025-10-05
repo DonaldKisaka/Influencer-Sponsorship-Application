@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -25,6 +26,7 @@ public class Influencer implements UserDetails {
     @NotBlank(message = "Username cannot be blank")
     private String username;
 
+    @NotBlank(message = "Password cannot be blank")
     @Column(nullable = false)
     private String password;
 
@@ -32,16 +34,17 @@ public class Influencer implements UserDetails {
     private String socialMediaPlatform;
 
 
-    @NotBlank
     @Min(value = 0, message = "Followers cannot be negative")
     private Long followers;
 
-    @NotBlank
     @DecimalMin(value = "0.0", message = "Engagement rate cannot be negative")
-    @DecimalMax(value = "100.0", message = "Engagement rate cannot be greater than 1")
+    @DecimalMax(value = "100.0", message = "Engagement rate cannot be greater than 100")
     private Double engagementRate;
 
     private boolean enabled;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.INFLUENCER;
 
 
     public Influencer(String username, String password, String socialMediaPlatform, Long followers, Double engagementRate) {
@@ -52,11 +55,16 @@ public class Influencer implements UserDetails {
         this.engagementRate = engagementRate;
     }
 
+    public Influencer(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public Influencer() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("Role_" + role.name()));
     }
 
     @Override

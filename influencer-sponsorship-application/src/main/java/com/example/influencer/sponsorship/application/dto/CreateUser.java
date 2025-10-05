@@ -1,6 +1,5 @@
 package com.example.influencer.sponsorship.application.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
