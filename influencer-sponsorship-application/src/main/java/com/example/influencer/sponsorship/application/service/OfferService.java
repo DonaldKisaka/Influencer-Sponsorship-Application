@@ -10,7 +10,12 @@ import com.example.influencer.sponsorship.application.repository.BrandRepository
 import com.example.influencer.sponsorship.application.repository.InfluencerRepository;
 import com.example.influencer.sponsorship.application.repository.OfferRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OfferService {
@@ -50,9 +55,53 @@ public class OfferService {
                 .status(OfferStatus.PENDING)
                 .build();
         return offerDtoMapper.apply(offerRepository.save(offer));
+    }
 
+    @Transactional
+    public OfferDto acceptOffer (Long offerId) {
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new IllegalArgumentException("Offer not found with Id"));
 
+        if (offer.getStatus() != OfferStatus.PENDING) {
+            throw new IllegalArgumentException("Offer has already been processed.");
+        }
 
+        Brand brand = offer.getBrand();
+        if (brand.getBudget() < offer.getMoneyAmount()) {
+            throw new IllegalArgumentException("Insufficient brand budget.");
+        }
 
+        offer.setStatus(OfferStatus.ACCEPTED);
+        brand.setBudget(brand.getBudget() - offer.getMoneyAmount());
+        brandRepository.save(brand);
+
+        Influencer influencer = offer.getInfluencer();
+        influencer.setTotalEarnings(influencer.getTotalEarnings() + offer.getMoneyAmount());
+        influencerRepository.save(influencer);
+
+        return offerDtoMapper.apply(offerRepository.save(offer));
+    }
+
+    @Transactional
+    public OfferDto rejectOffer (Long offerId) {
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new IllegalArgumentException("Offer not found with Id"));
+
+        if (offer.getStatus() != OfferStatus.PENDING) {
+            throw new IllegalArgumentException("Offer has already been processed.");
+        }
+
+        offer.setStatus(OfferStatus.REJECTED);
+        return offerDtoMapper.apply(offerRepository.save(offer));
+    }
+
+    public Page<OfferDto> getOffersByInfluencer(Long influencerId, Pageable pageable) {
+        return offerRepository.findByInfluencerId(influencerId, pageable)
+                .map(OfferDtoMapper);
+    }
+
+    public Page<OfferDto> getOffersByBrand(Long brandId, Pageable pageable) {
+        return offerRepository.findByBrandId(brandId, pageable)
+                .map(OfferDtoMapper);
     }
 }

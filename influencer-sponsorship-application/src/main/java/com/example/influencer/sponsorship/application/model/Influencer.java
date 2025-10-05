@@ -41,18 +41,22 @@ public class Influencer implements UserDetails {
     @DecimalMax(value = "100.0", message = "Engagement rate cannot be greater than 100")
     private Double engagementRate;
 
+    @DecimalMin(value = "0.0", message = "Total earnings cannot be negative")
+    private Double totalEarnings = 0.0;
+
     private boolean enabled;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.INFLUENCER;
 
 
-    public Influencer(String username, String password, String socialMediaPlatform, Long followers, Double engagementRate) {
+    public Influencer(String username, String password, String socialMediaPlatform, Long followers, Double totalEarnings, Double engagementRate) {
         this.username = username;
         this.password = password;
         this.socialMediaPlatform = socialMediaPlatform;
         this.followers = followers;
         this.engagementRate = engagementRate;
+        this.totalEarnings = totalEarnings;
     }
 
     public Influencer(String username, String password) {
