@@ -102,4 +102,11 @@ public class OfferService {
         return offerRepository.findByBrandId(brandId, pageable)
                 .map(offerDtoMapper);
     }
+
+    public OfferDto getOfferById(Long offerId) {
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new IllegalArgumentException("Offer not found with Id"));
+
+        return offerDtoMapper.apply(offer);
+    }
 }
