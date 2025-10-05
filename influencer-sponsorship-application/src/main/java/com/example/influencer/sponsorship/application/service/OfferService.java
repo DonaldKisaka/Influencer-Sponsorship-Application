@@ -37,10 +37,10 @@ public class OfferService {
     @Transactional
     public OfferDto createOffer (OfferDto dto) {
         Influencer influencer = influencerRepository.findById(dto.influencerId())
-                .orElseThrow(() -> new IllegalArgumentException("Influencer not found with Id"));
+                .orElseThrow(() -> new IllegalArgumentException("Influencer not found with Id: " + dto.influencerId()));
 
         Brand brand = brandRepository.findById(dto.brandId())
-                .orElseThrow(() -> new IllegalArgumentException("Brand not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Brand not found: " + dto.brandId()));
 
         if (brand.getBudget() < dto.moneyAmount()) {
             throw new IllegalArgumentException("Brand budget is not enough.");
