@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OfferService {
@@ -97,11 +95,11 @@ public class OfferService {
 
     public Page<OfferDto> getOffersByInfluencer(Long influencerId, Pageable pageable) {
         return offerRepository.findByInfluencerId(influencerId, pageable)
-                .map(OfferDtoMapper);
+                .map(offerDtoMapper);
     }
 
     public Page<OfferDto> getOffersByBrand(Long brandId, Pageable pageable) {
         return offerRepository.findByBrandId(brandId, pageable)
-                .map(OfferDtoMapper);
+                .map(offerDtoMapper);
     }
 }
