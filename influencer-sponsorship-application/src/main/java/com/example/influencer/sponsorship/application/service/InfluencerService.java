@@ -37,16 +37,16 @@ public class InfluencerService {
                 .map(influencerDtoMapper);
     }
 
-    public InfluencerDto getInfluencerById(Long id) {
-        Influencer influencer = influencerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Influencer not found with Id: " + id));
+    public InfluencerDto getInfluencerById(Long influencerId) {
+        Influencer influencer = influencerRepository.findById(influencerId)
+                .orElseThrow(() -> new IllegalArgumentException("Influencer not found with Id: " + influencerId));
         return influencerDtoMapper.apply(influencer);
     }
 
     @Transactional
-    public InfluencerDto updateInfluencer(Long id, InfluencerDto dto) {
-        Influencer influencer = influencerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Influencer not found with Id: " + id));
+    public InfluencerDto updateInfluencer(Long influencerId, InfluencerDto dto) {
+        Influencer influencer = influencerRepository.findById(influencerId)
+                .orElseThrow(() -> new IllegalArgumentException("Influencer not found with Id: " + influencerId));
 
         influencer.setSocialMediaPlatform(dto.socialMediaPlatform());
         influencer.setFollowers(dto.followers());
@@ -56,10 +56,10 @@ public class InfluencerService {
     }
 
     @Transactional
-    public void deleteInfluencer(Long id) {
-        if (!influencerRepository.existsById(id)) {
-            throw new IllegalArgumentException("Influencer not found with Id: " + id);
+    public void deleteInfluencer(Long influencerId) {
+        if (!influencerRepository.existsById(influencerId)) {
+            throw new IllegalArgumentException("Influencer not found with Id: " + influencerId);
         }
-        influencerRepository.deleteById(id);
+        influencerRepository.deleteById(influencerId);
     }
 }
