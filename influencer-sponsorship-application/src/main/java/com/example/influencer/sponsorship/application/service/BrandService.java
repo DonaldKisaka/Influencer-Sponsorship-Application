@@ -50,16 +50,6 @@ public class BrandService {
                 .map(brandDtoMapper);
     }
 
-    @Transactional
-    public void deductBudget(Long brandId, Double amount) {
-        Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new IllegalArgumentException("Brand not found with id: " + brandId));
-        if (brand.getBudget() < amount) {
-            throw new IllegalArgumentException("Insufficient brand budget. Available: " + brand.getBudget() + ", Required: " + amount);
-        }
-        brand.setBudget(brand.getBudget() - amount);
-        brandRepository.save(brand);
-    }
 
     @Transactional
     public void deleteBrand(Long brandId) {
